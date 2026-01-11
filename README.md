@@ -14,26 +14,31 @@ Given the Five Elements as a vector:
 v = (金, 木, 水, 火, 土)ᵀ
 ```
 
-The outer product v ⊗ vᵀ yields a 5×5 matrix of two-radical compounds:
+The outer product v ⊗ vᵀ yields a 5×5 matrix of two-radical compounds (using binary IDS operators ⿰ or ⿱):
 
 ```
          金    木    水    火    土
       ┌                            ┐
-  金  │  鑫    鉢    淦    鈥    釷  │
+  金  │  鍂    鉢    淦    鈥    釷  │
   木  │  鉢    林    沐    杣    杜  │
-  水  │  淦    沐    淼    淡    汢  │
+  水  │  淦    沐    沝    淡    汢  │
   火  │  鈥    杣    淡    炎    灶  │
   土  │  釷    杜    汢    灶    圭  │
       └                            ┘
 ```
 
+Diagonal elements use exactly 2 radicals: 鍂(⿰金金), 林(⿰木木), 沝(⿰水水), 炎(⿱火火), 圭(⿱土土).
+
 ### Higher-Rank Tensors
 
-Extend to rank-3 (three-radical), rank-4, rank-5 combinations:
+Extend to rank-3 (three-radical), rank-4, rank-5 combinations using ternary or nested IDS operators:
 
 ```
-Rank-3: v ⊗ v ⊗ v → 5×5×5 tensor (e.g., 鑫 = 金+金+金, 森 = 木+木+木, 淼 = 水+水+水)
+Rank-3: v ⊗ v ⊗ v → 5×5×5 tensor
+  Diagonal: 鑫(金×3), 森(木×3), 淼(水×3), 焱(火×3), 垚(土×3)
+
 Rank-4: v ⊗ v ⊗ v ⊗ v → 5×5×5×5 tensor
+Rank-5: v ⊗ v ⊗ v ⊗ v ⊗ v → 5×5×5×5×5 tensor
 ```
 
 ## Features
