@@ -81,9 +81,7 @@ This project is inspired by the "Linear Mandarin" meme, which humorously applies
 
 ### Attribution
 
-- **Earliest viral post**: [@AdalwinAmillion on X](https://x.com/AdalwinAmillion/status/1398738675299721226) (May 2021)
-- **Reddit**: [r/mathmemes](https://www.reddit.com/r/mathmemes/comments/nq1pv6/linear_mandarin/) (May 31, 2021)
-- **Instagram repost**: [@stem357](https://www.instagram.com/stem357/) (Samantha Townsend)
+- **Linear Mandarin meme**: [@AdalwinAmillion on X](https://x.com/AdalwinAmillion/status/1398738675299721226) (May 2021, earliest known viral post; original creator unknown)
 - **"X is not real" format**: [Skull Cow meme](https://knowyourmeme.com/memes/skull-cow-isnt-real-it-cant-hurt-you) by @Probgoblin (2018)
 
 ## License
