@@ -79,7 +79,11 @@ This project is inspired by the "Linear Mandarin" meme, which humorously applies
 > Therapist: Linear Mandarin is not real, it cannot hurt you.
 > Linear Mandarin: [matrix of Chinese characters]
 
-- **Linear Mandarin meme**: [@stem357](https://www.instagram.com/stem357/) (Samantha Townsend)
+### Attribution
+
+- **Earliest viral post**: [@AdalwinAmillion on X](https://x.com/AdalwinAmillion/status/1398738675299721226) (May 2021)
+- **Reddit**: [r/mathmemes](https://www.reddit.com/r/mathmemes/comments/nq1pv6/linear_mandarin/) (May 31, 2021)
+- **Instagram repost**: [@stem357](https://www.instagram.com/stem357/) (Samantha Townsend)
 - **"X is not real" format**: [Skull Cow meme](https://knowyourmeme.com/memes/skull-cow-isnt-real-it-cant-hurt-you) by @Probgoblin (2018)
 
 ## License
