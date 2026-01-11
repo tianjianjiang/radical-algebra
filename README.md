@@ -4,7 +4,7 @@ Tensor algebra on Chinese radicals — find valid CJKV character combinations (e
 
 ## Concept
 
-Treat Chinese radicals as elements of a vector space. Tensor operations (outer products) generate compound characters. All characters (input and output) must be valid CJKV ideographs excluding simplified Chinese.
+Treat Chinese radicals as elements of a vector space. Tensor operations (outer products) generate compound characters. All characters (input and output) must be valid CJKV ideographs, excluding simplified Chinese.
 
 ### Rank-2 Example: Wu Xing (五行) Outer Product
 
@@ -79,7 +79,8 @@ This project is inspired by the "Linear Mandarin" meme, which humorously applies
 > Therapist: Linear Mandarin is not real, it cannot hurt you.
 > Linear Mandarin: [matrix of Chinese characters]
 
-Original meme by [@stem357](https://www.instagram.com/stem357/) (Samantha Townsend).
+- **Linear Mandarin meme**: [@stem357](https://www.instagram.com/stem357/) (Samantha Townsend)
+- **"X is not real" format**: [Skull Cow meme](https://knowyourmeme.com/memes/skull-cow-isnt-real-it-cant-hurt-you) by @Probgoblin (2018)
 
 ## License
 
