@@ -5,7 +5,11 @@ description = "Tensor algebra on Chinese radicals - find valid CJKV character co
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.11"
-dependencies = []
+dependencies = [
+    "numpy>=1.24",
+    "hanzipy>=1.0.4",
+    "hanzidentifier>=1.3.0",
+]
 
 [project.optional-dependencies]
 dev = [
