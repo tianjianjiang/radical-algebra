@@ -1,10 +1,10 @@
 # radical-algebra
 
-Tensor algebra on Chinese radicals — find valid CJKV character combinations via outer products and higher-rank tensor operations.
+Tensor algebra on Chinese radicals — find valid CJKV character combinations (excluding simplified Chinese) via outer products and higher-rank tensor operations.
 
 ## Concept
 
-Treat Chinese radicals as elements of a vector space. Tensor operations (outer products) generate compound characters, validated against CJKV Unicode (excluding simplified Chinese).
+Treat Chinese radicals as elements of a vector space. Tensor operations (outer products) generate compound characters. All characters (input and output) must be valid CJKV ideographs, excluding simplified Chinese.
 
 ### Rank-2 Example: Wu Xing (五行) Outer Product
 
@@ -19,11 +19,11 @@ The outer product v ⊗ vᵀ yields a 5×5 matrix of two-radical compounds:
 ```
          金    木    水    火    土
       ┌                            ┐
-  金  │  鑫    鉢    淦    钬    钍  │
+  金  │  鑫    鉢    淦    鈥    釷  │
   木  │  鉢    林    沐    杣    杜  │
   水  │  淦    沐    淼    淡    汢  │
-  火  │  钬    杣    淡    炎    灶  │
-  土  │  钍    杜    汢    灶    圭  │
+  火  │  鈥    杣    淡    炎    灶  │
+  土  │  釷    杜    汢    灶    圭  │
       └                            ┘
 ```
 
@@ -39,7 +39,7 @@ Rank-4: v ⊗ v ⊗ v ⊗ v → 5×5×5×5 tensor
 ## Features
 
 - **Predefined radical sets**: Wu Xing (五行), extensible to custom sets
-- **CJKV validation**: Only output valid Unicode characters (CJK Unified Ideographs), excluding simplified Chinese
+- **CJKV validation**: All characters must be valid CJKV ideographs (CJK Unified Ideographs, Extensions), excluding simplified Chinese
 - **Tensor operations**: Support rank 2-5 outer products
 - **Mathematical notation**: Text-based output with proper tensor notation
 
@@ -71,6 +71,18 @@ print(matrix)
 tensor3 = outer_product(wuxing, rank=3)
 print(tensor3)
 ```
+
+## Inspiration
+
+This project is inspired by the "Linear Mandarin" meme, which humorously applies linear algebra notation to Chinese character composition.
+
+> Therapist: Linear Mandarin is not real, it cannot hurt you.
+> Linear Mandarin: [matrix of Chinese characters]
+
+### Attribution
+
+- **Linear Mandarin meme**: [@AdalwinAmillion](https://x.com/AdalwinAmillion/status/1398738675299721226) (May 29, 2021; only surviving visual evidence). Credits @dru00d in thread: "please also give the person who sent me this a follow: @dru00d".
+- **"X is not real" format**: [Skull Cow meme](https://knowyourmeme.com/memes/skull-cow-isnt-real-it-cant-hurt-you) by @Probgoblin (2018)
 
 ## License
 
