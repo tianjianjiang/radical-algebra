@@ -152,3 +152,84 @@ class TestWuXingRank2:
         result = outer_product(rs, rank=2)
         cell = result[1, 4]  # 木+土
         assert "杜" in cell
+
+
+class TestRank3Tensor:
+    """Tests for rank-3 tensor (Phase 7)."""
+
+    def test_should_return_2x2x2_tensor_when_rank3_size2(self) -> None:
+        """Base case for rank-3: 2×2×2 tensor."""
+        rs = RadicalSet("二元", ["金", "木"])
+        result = outer_product(rs, rank=3)
+        assert result.shape == (2, 2, 2)
+
+    def test_should_return_5x5x5_tensor_when_rank3_size5(self) -> None:
+        """Wu Xing rank-3: 5×5×5 tensor."""
+        rs = RadicalSet("五行", ["金", "木", "水", "火", "土"])
+        result = outer_product(rs, rank=3)
+        assert result.shape == (5, 5, 5)
+
+    def test_should_find_xin_at_diagonal_rank3(self) -> None:
+        """[0,0,0]: 金+金+金 should contain 鑫."""
+        rs = RadicalSet("五行", ["金", "木", "水", "火", "土"])
+        result = outer_product(rs, rank=3)
+        cell = result[0, 0, 0]  # 金×3
+        assert "鑫" in cell
+
+    def test_should_find_sen_at_diagonal_rank3(self) -> None:
+        """[1,1,1]: 木+木+木 should contain 森."""
+        rs = RadicalSet("五行", ["金", "木", "水", "火", "土"])
+        result = outer_product(rs, rank=3)
+        cell = result[1, 1, 1]  # 木×3
+        assert "森" in cell
+
+    def test_should_find_miao_at_diagonal_rank3(self) -> None:
+        """[2,2,2]: 水+水+水 should contain 淼."""
+        rs = RadicalSet("五行", ["金", "木", "水", "火", "土"])
+        result = outer_product(rs, rank=3)
+        cell = result[2, 2, 2]  # 水×3
+        assert "淼" in cell
+
+    def test_should_find_yan3_at_diagonal_rank3(self) -> None:
+        """[3,3,3]: 火+火+火 should contain 焱."""
+        rs = RadicalSet("五行", ["金", "木", "水", "火", "土"])
+        result = outer_product(rs, rank=3)
+        cell = result[3, 3, 3]  # 火×3
+        assert "焱" in cell
+
+    def test_should_find_yao_at_diagonal_rank3(self) -> None:
+        """[4,4,4]: 土+土+土 should contain 垚."""
+        rs = RadicalSet("五行", ["金", "木", "水", "火", "土"])
+        result = outer_product(rs, rank=3)
+        cell = result[4, 4, 4]  # 土×3
+        assert "垚" in cell
+
+
+class TestRank4And5Tensor:
+    """Tests for rank-4 and rank-5 tensors (Phase 7)."""
+
+    def test_should_return_2x2x2x2_tensor_when_rank4_size2(self) -> None:
+        """Base case for rank-4: 2×2×2×2 tensor."""
+        rs = RadicalSet("二元", ["金", "木"])
+        result = outer_product(rs, rank=4)
+        assert result.shape == (2, 2, 2, 2)
+
+    def test_should_return_2x2x2x2x2_tensor_when_rank5_size2(self) -> None:
+        """Base case for rank-5: 2×2×2×2×2 tensor."""
+        rs = RadicalSet("二元", ["金", "木"])
+        result = outer_product(rs, rank=5)
+        assert result.shape == (2, 2, 2, 2, 2)
+
+    def test_rank4_diagonal_should_be_set(self) -> None:
+        """Rank-4 diagonal should be a set (even if empty)."""
+        rs = RadicalSet("二元", ["金", "木"])
+        result = outer_product(rs, rank=4)
+        cell = result[0, 0, 0, 0]  # 金×4
+        assert isinstance(cell, set)
+
+    def test_rank5_diagonal_should_be_set(self) -> None:
+        """Rank-5 diagonal should be a set (even if empty)."""
+        rs = RadicalSet("二元", ["金", "木"])
+        result = outer_product(rs, rank=5)
+        cell = result[0, 0, 0, 0, 0]  # 金×5
+        assert isinstance(cell, set)
