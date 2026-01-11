@@ -72,6 +72,15 @@ tensor3 = outer_product(wuxing, rank=3)
 print(tensor3)
 ```
 
+## Inspiration
+
+This project is inspired by the "Linear Mandarin" meme, which humorously applies linear algebra notation to Chinese character composition.
+
+> Therapist: Linear Mandarin is not real, it cannot hurt you.
+> Linear Mandarin: [matrix of Chinese characters]
+
+Original meme by [@stem357](https://www.instagram.com/stem357/) (Samantha Townsend).
+
 ## License
 
 MIT
