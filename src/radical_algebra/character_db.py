@@ -118,9 +118,7 @@ class CharacterDatabase:
         self._char_to_ids: dict[str, str] = dict(ids_data) if ids_data else _load_cjkvi_ids()
 
         # Build reverse index: IDS string -> character
-        self._ids_to_char: dict[str, str] = {
-            ids: char for char, ids in self._char_to_ids.items()
-        }
+        self._ids_to_char: dict[str, str] = {ids: char for char, ids in self._char_to_ids.items()}
 
         # Build component index: sorted component tuple -> set of (IDS, char)
         self._component_index: dict[tuple[str, ...], set[tuple[str, str]]] = defaultdict(set)
