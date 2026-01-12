@@ -138,13 +138,18 @@ class TestWuXingRank2:
         assert "炎" in result[3, 3]  # 火+火
         assert "圭" in result[4, 4]  # 土+土
 
-    def test_should_have_gan_at_water_gold(self) -> None:
-        """[2,0]: 水+金 should contain 淦."""
+    def test_should_have_chars_at_water_gold(self) -> None:
+        """[2,0]: 水+金 should contain valid characters.
+
+        Note: 淦 uses 氵 (three-dot water) not 水, so it won't be found.
+        Valid 水+金 characters include 淾, 𨥗, 𫒎.
+        """
         rs = RadicalSet("五行", ["金", "木", "水", "火", "土"])
         result = outer_product(rs, rank=2)
         # Indices: 金=0, 木=1, 水=2, 火=3, 土=4
         cell = result[2, 0]  # 水+金
-        assert "淦" in cell
+        # Should find actual 水+金 characters from cjkvi-ids
+        assert any(c in cell for c in ["淾", "𨥗", "𫒎"])
 
     def test_should_have_du_at_wood_earth(self) -> None:
         """[1,4]: 木+土 should contain 杜."""

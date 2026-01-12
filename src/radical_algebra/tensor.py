@@ -136,6 +136,14 @@ def outer_product(radical_set: RadicalSet, rank: int) -> TensorResult:
         component_chars = db.lookup_by_components(radicals)
         chars.update(component_chars)
 
+        # Use composition-based lookup to find ALL characters with these radicals
+        # This counts radicals and finds any character composed of exactly them
+        radical_counts: dict[str, int] = {}
+        for r in radicals:
+            radical_counts[r] = radical_counts.get(r, 0) + 1
+        composition_chars = db.lookup_by_composition(radical_counts)
+        chars.update(composition_chars)
+
         data[indices] = chars
 
     return TensorResult(radical_set, rank, data)
