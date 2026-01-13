@@ -77,6 +77,23 @@ tensor3 = outer_product(wuxing, rank=3)
 print(tensor3)
 ```
 
+### Command Line
+
+```bash
+# Wu Xing (Five Elements) rank-2 matrix
+uv run python -m radical_algebra
+
+# Higher ranks (3, 4, 5)
+uv run python -m radical_algebra --rank 3
+uv run python -m radical_algebra --rank 4
+
+# Custom radicals
+uv run python -m radical_algebra --radicals 日月
+
+# Help
+uv run python -m radical_algebra --help
+```
+
 ## Inspiration
 
 This project is inspired by the "Linear Mandarin" meme, which humorously applies linear algebra notation to Chinese character composition.
