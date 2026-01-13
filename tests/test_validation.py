@@ -38,6 +38,16 @@ class TestIsCjkCharacter:
         """Multiple characters should not be valid (single char only)."""
         assert is_cjk_character("金木") is False
 
+    def test_should_accept_extension_i_character(self) -> None:
+        """Extension I characters (Unicode 15.0) should be valid CJK."""
+        # U+2EC00 is in Extension I range (U+2EBF0–U+2EE5D)
+        assert is_cjk_character("\U0002EC00") is True
+
+    def test_should_accept_extension_j_character(self) -> None:
+        """Extension J characters (Unicode 17.0) should be valid CJK."""
+        # U+323B0 is first char in Extension J range (U+323B0–U+3347B)
+        assert is_cjk_character("\U000323B0") is True
+
 
 class TestIsSimplifiedOnly:
     """Tests for is_simplified_only function."""
