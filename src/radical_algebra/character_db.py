@@ -24,6 +24,9 @@ IDS_OPERATORS = frozenset("⿰⿱⿲⿳⿴⿵⿶⿷⿸⿹⿺⿻")
 # Wu Xing (Five Elements) radicals
 WU_XING_RADICALS = frozenset(["金", "木", "水", "火", "土"])
 
+# Maximum recursion depth for IDS expansion (prevents infinite loops)
+MAX_RECURSION_DEPTH = 10
+
 
 def _load_cjkvi_ids() -> dict[str, str]:
     """Load IDS data from cjkvi-ids database.
@@ -68,7 +71,7 @@ def _count_wu_xing_radicals(
         Dictionary of {radical: count} if char is composed only of stop_radicals,
         None if char contains non-stop radicals.
     """
-    if depth > 10:
+    if depth > MAX_RECURSION_DEPTH:
         return None
 
     # If this character is a stop radical, return it
@@ -117,8 +120,12 @@ class CharacterDatabase:
         # Load IDS data: character -> IDS decomposition
         self._char_to_ids: dict[str, str] = dict(ids_data) if ids_data else _load_cjkvi_ids()
 
-        # Build reverse index: IDS string -> character
-        self._ids_to_char: dict[str, str] = {ids: char for char, ids in self._char_to_ids.items()}
+        # Build reverse index: IDS string -> set of characters
+        # Note: Multiple characters can share the same IDS decomposition
+        # (e.g., compatibility variants), so we use a set to preserve all.
+        self._ids_to_char: dict[str, set[str]] = defaultdict(set)
+        for char, ids in self._char_to_ids.items():
+            self._ids_to_char[ids].add(char)
 
         # Build component index: sorted component tuple -> set of (IDS, char)
         self._component_index: dict[tuple[str, ...], set[tuple[str, str]]] = defaultdict(set)
@@ -144,16 +151,17 @@ class CharacterDatabase:
         """Return number of character entries."""
         return len(self._char_to_ids)
 
-    def lookup_by_ids(self, ids_string: str) -> str | None:
-        """Look up a character by exact IDS string.
+    def lookup_by_ids(self, ids_string: str) -> set[str]:
+        """Look up all characters with exact IDS string.
 
         Args:
             ids_string: The IDS string (e.g., "⿰金金").
 
         Returns:
-            The character if found, None otherwise.
+            Set of characters matching this IDS. Empty set if none found.
+            Multiple characters may share the same IDS (e.g., compatibility variants).
         """
-        return self._ids_to_char.get(ids_string)
+        return self._ids_to_char.get(ids_string, set())
 
     def lookup_by_components(self, components: list[str]) -> set[str]:
         """Look up all characters containing exactly these components.

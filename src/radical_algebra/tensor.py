@@ -10,6 +10,7 @@ structures can map the same radical combination to different characters.
 
 from __future__ import annotations
 
+from collections import Counter
 from itertools import product
 from typing import TYPE_CHECKING
 
@@ -54,7 +55,7 @@ class TensorResult:
     @property
     def shape(self) -> tuple[int, ...]:
         """Shape of the tensor (n repeated rank times)."""
-        return tuple([self._size] * self._rank)
+        return (self._size,) * self._rank
 
     @property
     def rank(self) -> int:
@@ -128,9 +129,8 @@ def outer_product(radical_set: RadicalSet, rank: int) -> TensorResult:
         # Try all IDS structures
         for structure in structures:
             ids_string = build_ids_string(structure, radicals)
-            char = db.lookup_by_ids(ids_string)
-            if char:
-                chars.add(char)
+            ids_chars = db.lookup_by_ids(ids_string)
+            chars.update(ids_chars)
 
         # Also try component-based lookup (catches structures not enumerated)
         component_chars = db.lookup_by_components(radicals)
@@ -138,9 +138,7 @@ def outer_product(radical_set: RadicalSet, rank: int) -> TensorResult:
 
         # Use composition-based lookup to find ALL characters with these radicals
         # This counts radicals and finds any character composed of exactly them
-        radical_counts: dict[str, int] = {}
-        for r in radicals:
-            radical_counts[r] = radical_counts.get(r, 0) + 1
+        radical_counts = dict(Counter(radicals))
         composition_chars = db.lookup_by_composition(radical_counts)
         chars.update(composition_chars)
 
