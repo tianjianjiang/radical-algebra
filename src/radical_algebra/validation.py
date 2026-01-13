@@ -30,7 +30,7 @@ def is_cjk_character(char: str) -> bool:
         (0x2EBF0, 0x2EE5D),  # CJK Unified Ideographs Extension I (Unicode 15.0)
         (0x30000, 0x3134F),  # CJK Unified Ideographs Extension G
         (0x31350, 0x323AF),  # CJK Unified Ideographs Extension H
-        (0x323B0, 0x3347B),  # CJK Unified Ideographs Extension J (Unicode 17.0)
+        (0x323B0, 0x3347F),  # CJK Unified Ideographs Extension J (Unicode 17.0)
     ]
 
     return any(start <= code_point <= end for start, end in cjk_ranges)

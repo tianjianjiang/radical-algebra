@@ -45,8 +45,14 @@ class TestIsCjkCharacter:
 
     def test_should_accept_extension_j_character(self) -> None:
         """Extension J characters (Unicode 17.0) should be valid CJK."""
-        # U+323B0 is first char in Extension J range (U+323B0–U+3347B)
+        # U+323B0 is first char in Extension J range (U+323B0–U+3347F)
         assert is_cjk_character("\U000323B0") is True
+
+    def test_should_accept_extension_j_upper_boundary(self) -> None:
+        """Extension J upper boundary (U+3347F) should be valid."""
+        assert is_cjk_character("\U0003347F") is True
+        # U+33480 is outside the range
+        assert is_cjk_character("\U00033480") is False
 
 
 class TestIsSimplifiedOnly:
