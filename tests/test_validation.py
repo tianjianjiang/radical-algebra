@@ -76,6 +76,11 @@ class TestIsSimplifiedOnly:
         assert is_simplified_only("火") is False
         assert is_simplified_only("土") is False
 
+    def test_should_return_false_when_multi_character(self) -> None:
+        """Multi-character strings should return False (not simplified check)."""
+        assert is_simplified_only("金木") is False
+        assert is_simplified_only("") is False
+
 
 class TestValidateRadical:
     """Tests for validate_radical function."""

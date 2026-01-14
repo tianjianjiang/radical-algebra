@@ -67,7 +67,7 @@ Examples:
         "--rank",
         type=int,
         default=2,
-        choices=[2, 3, 4, 5],
+        choices=[2, 3, 4, 5, 6, 7, 8],
         help="Tensor rank (default: 2)",
     )
     parser.add_argument(

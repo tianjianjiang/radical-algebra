@@ -97,3 +97,12 @@ class TestRadicalSetIndexing:
         rs = RadicalSet("test", ["金", "木", "水"])
         assert rs[-1] == "水"
         assert rs[-2] == "木"
+
+    def test_repr_should_return_string_representation(self) -> None:
+        """__repr__ should return a string representation."""
+        rs = RadicalSet("test", ["金", "木"])
+        result = repr(rs)
+        assert "RadicalSet" in result
+        assert "test" in result
+        assert "金" in result
+        assert "木" in result

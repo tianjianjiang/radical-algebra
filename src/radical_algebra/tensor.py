@@ -42,7 +42,7 @@ class TensorResult:
 
     Attributes:
         shape: Tuple of dimensions (e.g., (5, 5) for rank-2 with 5 elements).
-        rank: The tensor rank (2-5).
+        rank: The tensor rank (2-8).
         radical_set: The original RadicalSet used.
     """
 
@@ -71,7 +71,7 @@ class TensorResult:
 
     @property
     def rank(self) -> int:
-        """The tensor rank (2-5)."""
+        """The tensor rank (2-8)."""
         return self._rank
 
     @property
@@ -108,7 +108,7 @@ def outer_product(radical_set: RadicalSet, rank: int) -> TensorResult:
 
     For rank-2: v ⊗ v^T yields an n×n matrix.
     For rank-3: v ⊗ v ⊗ v yields an n×n×n tensor.
-    And so on for ranks 4-5.
+    And so on for ranks 4-8.
 
     Each cell [i, j, ...] contains a SET of valid characters that can
     be formed by combining radical_set[i], radical_set[j], ... using
@@ -116,25 +116,30 @@ def outer_product(radical_set: RadicalSet, rank: int) -> TensorResult:
 
     Args:
         radical_set: The RadicalSet to compute outer product of.
-        rank: The tensor rank (2-5).
+        rank: The tensor rank (2-8).
 
     Returns:
         TensorResult containing sets of valid characters.
 
     Raises:
-        InvalidRankError: If rank is not between 2 and 5.
+        InvalidRankError: If rank is not between 2 and 8.
     """
-    if rank < 2 or rank > 5:
-        raise InvalidRankError(f"Rank must be between 2 and 5, got {rank}")
+    if rank < 2 or rank > 8:
+        raise InvalidRankError(f"Rank must be between 2 and 8, got {rank}")
 
     db = _get_cached_database()
     n = len(radical_set)
-    structures = enumerate_structures(rank)
 
     data: dict[tuple[int, ...], set[str]] = {}
 
     # Check if all radicals in the set are Wu Xing
     is_wu_xing_set = all(r in WU_XING_RADICALS for r in radical_set)
+
+    # Only enumerate IDS structures for non-Wu Xing and rank <= 5
+    # Higher ranks have exponentially many structures (>100k for rank 6+)
+    structures = None
+    if not is_wu_xing_set and rank <= 5:
+        structures = enumerate_structures(rank)
 
     # Generate all index combinations
     for indices in product(range(n), repeat=rank):
@@ -145,14 +150,17 @@ def outer_product(radical_set: RadicalSet, rank: int) -> TensorResult:
             # It recursively counts radicals and finds all matching characters
             radical_counts = dict(Counter(radicals))
             chars = db.lookup_by_composition(radical_counts)
-        else:
-            # For non-Wu Xing: use component-based lookup
-            # Plus IDS structure enumeration for exact matches
+        elif structures is not None:
+            # For non-Wu Xing with rank <= 5: use IDS enumeration
             chars = set()
             for structure in structures:
                 ids_string = build_ids_string(structure, radicals)
                 chars.update(db.lookup_by_ids(ids_string))
             chars.update(db.lookup_by_components(radicals))
+        else:
+            # For non-Wu Xing with rank > 5: component lookup only
+            # IDS enumeration would be too expensive
+            chars = db.lookup_by_components(radicals)
 
         data[indices] = chars
 

@@ -304,3 +304,42 @@ class TestParameterizedLookups:
         db = CharacterDatabase()
         result = db.lookup_by_components(radicals)
         assert expected_char in result
+
+
+class TestUtilityMethods:
+    """Tests for utility methods of CharacterDatabase."""
+
+    def test_get_ids_should_return_ids_for_known_char(self) -> None:
+        """get_ids should return IDS string for a known character."""
+        db = CharacterDatabase()
+        # 林 = ⿰木木
+        result = db.get_ids("林")
+        assert result is not None
+        assert "木" in result
+
+    def test_get_ids_should_return_none_for_unknown_char(self) -> None:
+        """get_ids should return None for an unknown character."""
+        db = CharacterDatabase()
+        # ASCII 'a' is not in the database
+        result = db.get_ids("a")
+        assert result is None
+
+    def test_iter_wu_xing_chars_should_yield_wu_xing_compositions(self) -> None:
+        """iter_wu_xing_chars should yield Wu Xing character compositions."""
+        db = CharacterDatabase()
+        wu_xing_chars = list(db.iter_wu_xing_chars())
+        assert len(wu_xing_chars) > 0
+        # Each item should be (char, counts_dict)
+        char, counts = wu_xing_chars[0]
+        assert isinstance(char, str)
+        assert isinstance(counts, dict)
+        # Counts should only have Wu Xing radicals as keys
+        for radical in counts:
+            assert radical in ("金", "木", "水", "火", "土")
+
+    def test_iter_wu_xing_chars_should_include_xin(self) -> None:
+        """iter_wu_xing_chars should include 鑫 (金×3)."""
+        db = CharacterDatabase()
+        chars_with_counts = {char: counts for char, counts in db.iter_wu_xing_chars()}
+        assert "鑫" in chars_with_counts
+        assert chars_with_counts["鑫"] == {"金": 3}

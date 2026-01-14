@@ -90,14 +90,14 @@ class TestRankValidation:
     def test_should_raise_when_rank_less_than_2(self) -> None:
         """Rank must be at least 2."""
         rs = RadicalSet("test", ["金", "木"])
-        with pytest.raises(InvalidRankError, match="between 2 and 5"):
+        with pytest.raises(InvalidRankError, match="between 2 and 8"):
             outer_product(rs, rank=1)
 
-    def test_should_raise_when_rank_greater_than_5(self) -> None:
-        """Rank must be at most 5."""
+    def test_should_raise_when_rank_greater_than_8(self) -> None:
+        """Rank must be at most 8."""
         rs = RadicalSet("test", ["金", "木"])
-        with pytest.raises(InvalidRankError, match="between 2 and 5"):
-            outer_product(rs, rank=6)
+        with pytest.raises(InvalidRankError, match="between 2 and 8"):
+            outer_product(rs, rank=9)
 
 
 class TestTensorIndexing:
@@ -238,3 +238,109 @@ class TestRank4And5Tensor:
         result = outer_product(rs, rank=5)
         cell = result[0, 0, 0, 0, 0]  # 金×5
         assert isinstance(cell, set)
+
+
+class TestTensorProperties:
+    """Tests for TensorResult properties."""
+
+    def test_rank_property_should_return_rank(self) -> None:
+        """rank property should return the tensor rank."""
+        rs = RadicalSet("test", ["金", "木"])
+        result = outer_product(rs, rank=3)
+        assert result.rank == 3
+
+    def test_single_tuple_index_should_work(self) -> None:
+        """Indexing with single-element tuple should work."""
+        rs = RadicalSet("test", ["金", "木"])
+        result = outer_product(rs, rank=2)
+        # Access with (0, 0) as single cell
+        cell = result[(0, 0)]
+        assert isinstance(cell, set)
+
+    def test_non_tuple_index_should_convert(self) -> None:
+        """Non-tuple index should be converted to tuple (line 95)."""
+        rs = RadicalSet("test", ["金", "木"])
+        result = outer_product(rs, rank=2)
+        # Direct call with non-tuple - tests line 95
+        cell = result.__getitem__(0)
+        assert isinstance(cell, set)
+
+
+class TestNonWuXingRadicals:
+    """Tests for non-Wu Xing radical sets (lines 142, 153-163)."""
+
+    def test_non_wu_xing_rank2_should_work(self) -> None:
+        """Non-Wu Xing radicals at rank 2 should use IDS enumeration."""
+        rs = RadicalSet("test", ["日", "月"])
+        result = outer_product(rs, rank=2)
+        assert result.shape == (2, 2)
+        # 日+月 should produce 明
+        cell_01 = result[0, 1]
+        assert "明" in cell_01
+
+    def test_non_wu_xing_rank3_should_work(self) -> None:
+        """Non-Wu Xing radicals at rank 3 should use IDS enumeration."""
+        rs = RadicalSet("test", ["日", "月"])
+        result = outer_product(rs, rank=3)
+        assert result.shape == (2, 2, 2)
+
+    def test_non_wu_xing_rank5_should_use_ids_enumeration(self) -> None:
+        """Non-Wu Xing radicals at rank 5 should still use IDS enumeration."""
+        rs = RadicalSet("test", ["日", "月"])
+        result = outer_product(rs, rank=5)
+        assert result.shape == (2, 2, 2, 2, 2)
+
+    def test_non_wu_xing_rank6_should_use_component_lookup(self) -> None:
+        """Non-Wu Xing radicals at rank 6+ should use component lookup only."""
+        rs = RadicalSet("test", ["日", "月"])
+        result = outer_product(rs, rank=6)
+        assert result.shape == (2, 2, 2, 2, 2, 2)
+        # Should still return sets (possibly empty)
+        cell = result[0, 0, 0, 0, 0, 0]
+        assert isinstance(cell, set)
+
+
+class TestRank6To8Tensor:
+    """Tests for rank-6, rank-7, and rank-8 tensors."""
+
+    def test_should_return_correct_shape_when_rank6(self) -> None:
+        """Rank-6 tensor should have shape (2, 2, 2, 2, 2, 2)."""
+        rs = RadicalSet("二元", ["金", "木"])
+        result = outer_product(rs, rank=6)
+        assert result.shape == (2, 2, 2, 2, 2, 2)
+
+    def test_should_return_correct_shape_when_rank7(self) -> None:
+        """Rank-7 tensor should have shape (2, 2, 2, 2, 2, 2, 2)."""
+        rs = RadicalSet("二元", ["金", "木"])
+        result = outer_product(rs, rank=7)
+        assert result.shape == (2, 2, 2, 2, 2, 2, 2)
+
+    def test_should_return_correct_shape_when_rank8(self) -> None:
+        """Rank-8 tensor should have shape (2, 2, 2, 2, 2, 2, 2, 2)."""
+        rs = RadicalSet("二元", ["金", "木"])
+        result = outer_product(rs, rank=8)
+        assert result.shape == (2, 2, 2, 2, 2, 2, 2, 2)
+
+    def test_rank6_diagonal_should_be_set(self) -> None:
+        """Rank-6 diagonal should be a set."""
+        rs = RadicalSet("二元", ["金", "木"])
+        result = outer_product(rs, rank=6)
+        cell = result[0, 0, 0, 0, 0, 0]  # 金×6
+        assert isinstance(cell, set)
+
+    def test_rank7_diagonal_should_be_set(self) -> None:
+        """Rank-7 diagonal should be a set."""
+        rs = RadicalSet("二元", ["金", "木"])
+        result = outer_product(rs, rank=7)
+        cell = result[0, 0, 0, 0, 0, 0, 0]  # 金×7
+        assert isinstance(cell, set)
+
+    def test_rank8_should_find_mu8_char(self) -> None:
+        """[1,1,1,1,1,1,1,1]: 木×8 should contain 𣡽.
+
+        This is the highest rank character found in cjkvi-ids database.
+        """
+        rs = RadicalSet("二元", ["金", "木"])
+        result = outer_product(rs, rank=8)
+        cell = result[1, 1, 1, 1, 1, 1, 1, 1]  # 木×8
+        assert "𣡽" in cell
