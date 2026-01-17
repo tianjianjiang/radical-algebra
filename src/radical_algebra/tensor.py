@@ -102,6 +102,62 @@ class TensorResult:
 
         return self._data.get(index, set())
 
+    def __str__(self) -> str:
+        """Return string representation for print().
+
+        For rank-2: Displays as a matrix with headers and row labels.
+        For higher ranks: Displays the diagonal (same radical repeated N times).
+        """
+        radicals = list(self._radical_set)
+        lines: list[str] = []
+
+        if self._rank == 2:
+            # Matrix format for rank-2
+            n = len(radicals)
+
+            # Header
+            header = f"{'':4}" + "".join(f"{r:8}" for r in radicals)
+            lines.append(header)
+            lines.append("    " + "-" * (8 * n))
+
+            # Rows
+            for i, r1 in enumerate(radicals):
+                row = f"{r1:3}|"
+                for j in range(n):
+                    chars = self[i, j]
+                    if chars:
+                        display = ",".join(sorted(chars)[:2])
+                        if len(chars) > 2:
+                            display = display[:6] + ".."
+                    else:
+                        display = "--"
+                    row += f"{display:8}"
+                lines.append(row)
+        else:
+            # Diagonal format for higher ranks
+            lines.append(
+                f"Rank-{self._rank} diagonal (same radical repeated {self._rank} times):"
+            )
+            lines.append("-" * 50)
+
+            for i, r in enumerate(radicals):
+                idx = tuple([i] * self._rank)
+                chars = self[idx]
+                if chars:
+                    char_list = ", ".join(sorted(chars))
+                    lines.append(f"  {r} x {self._rank} = {char_list}")
+                else:
+                    lines.append(f"  {r} x {self._rank} = (no character found)")
+
+        return "\n".join(lines)
+
+    def __repr__(self) -> str:
+        """Return repr string for REPL display."""
+        return (
+            f"TensorResult(radical_set={self._radical_set.name!r}, "
+            f"rank={self._rank}, shape={self.shape})"
+        )
+
 
 def outer_product(radical_set: RadicalSet, rank: int) -> TensorResult:
     """Compute the outer product of a RadicalSet.
