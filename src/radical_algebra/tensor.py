@@ -135,9 +135,7 @@ class TensorResult:
                 lines.append(row)
         else:
             # Diagonal format for higher ranks
-            lines.append(
-                f"Rank-{self._rank} diagonal (same radical repeated {self._rank} times):"
-            )
+            lines.append(f"Rank-{self._rank} diagonal (same radical repeated {self._rank} times):")
             lines.append("-" * 50)
 
             for i, r in enumerate(radicals):
