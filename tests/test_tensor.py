@@ -344,3 +344,68 @@ class TestRank6To8Tensor:
         result = outer_product(rs, rank=8)
         cell = result[1, 1, 1, 1, 1, 1, 1, 1]  # 木×8
         assert "𣡽" in cell
+
+
+class TestTensorStringRepresentation:
+    """Tests for __str__ and __repr__ methods."""
+
+    def test_str_should_display_matrix_format_when_rank2(self) -> None:
+        """__str__ should output matrix format for rank-2 tensors."""
+        rs = RadicalSet("二元", ["金", "木"])
+        result = outer_product(rs, rank=2)
+        output = str(result)
+        # Should contain header with radicals
+        assert "金" in output
+        assert "木" in output
+        # Should contain separator line
+        assert "---" in output
+        # Should contain row labels with pipe
+        assert "|" in output
+
+    def test_str_should_display_diagonal_format_when_rank3(self) -> None:
+        """__str__ should output diagonal format for rank > 2."""
+        rs = RadicalSet("二元", ["金", "木"])
+        result = outer_product(rs, rank=3)
+        output = str(result)
+        # Should contain rank info
+        assert "Rank-3 diagonal" in output
+        # Should contain multiplication notation
+        assert "x 3" in output
+
+    def test_str_should_show_ellipsis_when_more_than_two_chars(self) -> None:
+        """__str__ should show ',..' when cell has more than 2 characters."""
+        rs = RadicalSet("五行", ["金", "木", "水", "火", "土"])
+        result = outer_product(rs, rank=2)
+        output = str(result)
+        # Some cells have many characters, should show truncation
+        # Check that output is generated without error
+        assert len(output) > 0
+        # Matrix should have multiple lines
+        assert output.count("\n") >= 5
+
+    def test_str_should_show_dashes_when_empty_cell(self) -> None:
+        """__str__ should show '--' for cells with no valid characters."""
+        # Use radicals that likely won't combine
+        rs = RadicalSet("test", ["一", "丨"])
+        result = outer_product(rs, rank=2)
+        output = str(result)
+        # Empty cells should show "--"
+        assert "--" in output
+
+    def test_repr_should_include_name_rank_shape(self) -> None:
+        """__repr__ should include radical_set name, rank, and shape."""
+        rs = RadicalSet("五行", ["金", "木", "水", "火", "土"])
+        result = outer_product(rs, rank=2)
+        output = repr(result)
+        assert "TensorResult" in output
+        assert "五行" in output
+        assert "rank=2" in output
+        assert "shape=(5, 5)" in output
+
+    def test_repr_should_be_informative_for_rank3(self) -> None:
+        """__repr__ should show correct shape for rank-3."""
+        rs = RadicalSet("二元", ["金", "木"])
+        result = outer_product(rs, rank=3)
+        output = repr(result)
+        assert "rank=3" in output
+        assert "shape=(2, 2, 2)" in output

@@ -8,6 +8,8 @@ import sys
 
 from radical_algebra import WU_XING, RadicalSet, outer_product
 
+_SEPARATOR_WIDTH = 50
+
 
 def print_matrix(matrix, radicals: list[str]) -> None:
     """Print rank-2 tensor as a matrix."""
@@ -21,14 +23,14 @@ def print_matrix(matrix, radicals: list[str]) -> None:
     print("    " + "-" * (8 * n))
 
     # Rows
-    for i, r1 in enumerate(radicals):
-        print(f"{r1:3}|", end="")
+    for i, row_radical in enumerate(radicals):
+        print(f"{row_radical:3}|", end="")
         for j in range(n):
             chars = matrix[i, j]
             if chars:
                 display = ",".join(sorted(chars)[:2])
                 if len(chars) > 2:
-                    display = display[:6] + ".."
+                    display = display + ",.."
             else:
                 display = "--"
             print(f"{display:8}", end="")
@@ -38,10 +40,10 @@ def print_matrix(matrix, radicals: list[str]) -> None:
 def print_tensor_diagonal(tensor, radicals: list[str], rank: int) -> None:
     """Print the super-diagonal of a higher-rank tensor."""
     print(f"\nRank-{rank} diagonal (same radical repeated {rank} times):")
-    print("-" * 50)
+    print("-" * _SEPARATOR_WIDTH)
 
     for i, r in enumerate(radicals):
-        idx = tuple([i] * rank)
+        idx = (i,) * rank
         chars = tensor[idx]
         if chars:
             char_list = ", ".join(sorted(chars))
@@ -105,7 +107,7 @@ Examples:
 
     # Show some notable results
     print("\nNotable characters:")
-    print("-" * 50)
+    print("-" * _SEPARATOR_WIDTH)
 
     if args.rank == 2:
         for i, r in enumerate(radicals):
@@ -115,7 +117,7 @@ Examples:
     else:
         count = 0
         for i, r in enumerate(radicals):
-            idx = tuple([i] * args.rank)
+            idx = (i,) * args.rank
             chars = result[idx]
             if chars:
                 print(f"  {r}x{args.rank} = {', '.join(sorted(chars))}")
